@@ -1,151 +1,126 @@
 import os
 import csv
 import qrcode
-import time
-from rich.console import Console
-from PIL import Image
 from PIL import Image, ImageDraw, ImageFont
+from rich.console import Console
 from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
-# Créer le dossier codeQR-eleve s'il n'existe pas
-output_dir = "codeQR_et_texte"
+# Créer le dossier de sortie s'il n'existe pas
+output_dir = "codeQR_et_texte_voiture"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # Chemin du fichier CSV contenant les données
-csv_file = "id_place.csv"
+csv_file = "dataQR.csv"
 
-# Configurer l'imprimante
-backend = 'pyusb'  # ou 'linux_kernel' ou 'network'
-model = 'QL-820NWB'
-printer = 'usb://0x04f9:0x209d'
+# Configuration de l'imprimante Brother QL
+backend = "pyusb"  # 'pyusb', 'linux_kernel', ou 'network'
+model = "QL-820NWB"
+printer = "usb://0x04f9:0x209d"  # Changez ce paramètre pour votre imprimante
 
-# générer d'abbord tout les qr code a partire du fichier csv 
+# Configuration de la police pour le texte
+try:
+    # Remplacez par le chemin exact de votre police si nécessaire
+    font = ImageFont.truetype("arial.ttf", 110)
+except IOError:
+    print("Police non trouvée. Assurez-vous que 'arial.ttf' est disponible.")
+    exit()
 
-# générer un fichier temporaire pour garder le chemin des QRcode generer
-chemin_fichier_temp = f"{output_dir}/image_final.temp"
+# Fichier temporaire pour stocker les chemins des images générées
+chemin_fichier_temp = os.path.join(output_dir, "images_a_imprimer.temp")
 
-# définir le fichier CSV a lire 
-csv_file = "id_place.csv"
-# lire le fichier CSV définie avec l'encodage utf-8
-with open(csv_file, mode='r', newline='', encoding='utf-8') as fichier_csv:
-    # utiliser le csv.DictReader https://docs.python.org/fr/3.10/library/csv.html 
+# Génération des QR Codes et des images
+console = Console()
+
+with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
+    # Lire les données du CSV
     lecture = csv.DictReader(fichier_csv)
 
-    # ajout d'une animation pendant le chargment
-    console = Console()
-    with console.status("[bold green]Génération des QRcode en cours...") as status:
-
-        # Ouvrir le fichier en mode écriture ('w' écrase l'ancien fichier ou le crée s'il n'existe pas)
-        with open(chemin_fichier_temp, 'w') as fichier:
-            # lecture des ligne 
+    with console.status(
+        "[bold green]Génération des QR Codes et des images en cours..."
+    ):
+        with open(chemin_fichier_temp, "w", encoding="utf-8") as fichier_temp:
             for row in lecture:
-                place = row['PLACE']
-                id = row['ID']
-                # affiche la ligne du csv sous la forme: Jean Dupont 3A 12345 {'nom': 'Jean', 'prénom': 'Dupont', 'classe': '3A', 'numéro_de_série': '12345'}
-                # print(nom, prenom, classe, numero_serie,"\n", row)
+                # Récupérer les données depuis le CSV
+                lien = row["LIEN"]
+                id = row["ID"]
+                code = row["CODE"]
 
-                # creation des QRcode et des texts
-                # mise en forme des données pour le QRcode et l'enrengistrer dans une variable : nom,prenom,classe,num série
-                qr_data = f"{id}"
-                text_data = f"{place}"
+                qr_data = lien
+                text_data = f"{lien}\nCode : {code}"
 
-                # creation du qrcode et text
-                # définition du format du QRcode
+                # Générer le QR Code
                 qr = qrcode.QRCode(
                     version=1,
                     error_correction=qrcode.constants.ERROR_CORRECT_L,
-                    box_size=10,
-                    border=4,
+                    box_size=20,  # Taille du QR Code
+                    border=0,  # Bordure réduite
                 )
                 qr.add_data(qr_data)
                 qr.make(fit=True)
 
-                # définition du format de l'image du text
-                # Créer une nouvelle image (largeur, hauteur) avec un fond blanc
-                width, height = 600, 290
-                image = Image.new('RGB', (width, height), 'white')
-                 
-                 # Initialiser l'objet de dessin
-                draw = ImageDraw.Draw(image)
+                img_QRcode = qr.make_image(
+                    fill_color="black", back_color="white"
+                ).convert("RGB")
 
-                # Charger une police (facultatif, vous pouvez utiliser une police par défaut)
-                # Remplacez 'arial.ttf' par le chemin vers une police sur votre système
-                font = ImageFont.truetype('arial.ttf', 140)  # Utilise une police par défaut
+                # Rogner les bords blancs du QR Code
+                bbox = img_QRcode.getbbox()
+                img_QRcode = img_QRcode.crop(bbox)
 
-                # Définir la position du texte
-                text_x, text_y = 50, 80  # Positionnement du texte dans l'image
+                # Générer l'image contenant le texte
+                text_width, text_height = 800, 400  # Taille de l'image pour le texte
+                image_text = Image.new("RGB", (text_width, text_height), "white")
+                draw = ImageDraw.Draw(image_text)
 
-                # génération du QRcode
-                # choix de la couleur dans la quelle sera créer le QRcode
-                img_QRcode = qr.make_image(fill_color="black", back_color="white")
+                # Calculer la position pour centrer le texte
+                text_width, text_height = draw.textsize(text_data, font=font)
+                text_x = (800 - text_width) // 2  # Centrer horizontalement
+                text_y = (400 - text_height) // 2  # Centrer verticalement
+                draw.text((text_x, text_y), text_data, fill="black", font=font)
 
-                # Dessiner le texte sur l'image
-                draw.text((text_x, text_y), text_data, fill='black', font=font)
+                # Fusionner QR Code et texte dans une seule image
+                largeur_totale = img_QRcode.width + image_text.width
+                hauteur_totale = max(img_QRcode.height, image_text.height)
+                nouvelle_image = Image.new(
+                    "RGB", (largeur_totale, hauteur_totale), "white"
+                )
+                nouvelle_image.paste(img_QRcode, (0, 0))  # QR Code à gauche
+                nouvelle_image.paste(
+                    image_text, (img_QRcode.width, 0)
+                )  # Texte à droite
 
-                # création du QRcode et enrengistrement de l'image sous le nom et le chemin définie
-                chemin_enrengistrement_QR = os.path.join(output_dir, f"{id}_qrcode.png")
-                img_QRcode.save(chemin_enrengistrement_QR)
+                # Enregistrer l'image finale
+                chemin_enregistrement = os.path.join(
+                    output_dir, f"{id}_code_qrcode_et_text.png"
+                )
+                nouvelle_image.save(chemin_enregistrement)
 
-                # enrengistrment de l'image dans un répertoire définie
-                # Sauvegarder l'image
-                chemin_enrengistrement_texte_image = os.path.join(output_dir, f"{place}_text.png")
-                image.save(chemin_enrengistrement_texte_image)
+                # Ajouter le chemin de l'image au fichier temporaire
+                fichier_temp.write(f"{chemin_enregistrement}\n")
 
-                # fusion des 2 image pour n'en former qu'une
-                # Ouvre les deux images
-                image_QR = Image.open(chemin_enrengistrement_QR)
-                image_text = Image.open(chemin_enrengistrement_texte_image)
+                console.print(
+                    f"[bold green]Image générée pour {id} : {chemin_enregistrement}"
+                )
 
-                # Obtiens les dimensions des images
-                largeur1, hauteur1 = image_QR.size
-                largeur2, hauteur2 = image_text.size
+# Impression des images
+console.print("[bold blue]Démarrage de l'impression des images générées...")
 
-                largeur_totale = largeur1 + largeur2
-                hauteur_totale = max(hauteur1, hauteur2)
-                nouvelle_image = Image.new('RGB', (largeur_totale, hauteur_totale))
+with open(chemin_fichier_temp, "r", encoding="utf-8") as fichier_temp:
+    lignes = fichier_temp.readlines()
 
-                # Colle les deux images dans la nouvelle image
-                nouvelle_image.paste(image_QR, (0, 0))
-                nouvelle_image.paste(image_text, (largeur1, 0))  # Positionne la deuxième image à droite de la première
-
-                # Enregistre le resultat
-                chemin_enrengistrement_QRcode_et_texte = os.path.join(output_dir,f"{id}_qrcode_et_text.png")
-                nouvelle_image.save(chemin_enrengistrement_QRcode_et_texte)
-
-                # enrengistrer le chemin du QRcode dans le fichier temp
-                # Écrire du texte dans le fichier
-                fichier.write(f"{id}_qrcode_et_text.png\n")
-
-                # afficher un text pour confirmer la creation du code QR
-                print(f"QR code généré pour {id} et enregistré sous {chemin_enrengistrement_QR}")
-                # afficher un text pour confirmer la creation du text
-                print(f"text généré pour {place} et enregistré sous {chemin_enrengistrement_texte_image}")
-
-# impression du tout une fois toute les image générer
-
-# Lecture du fichier et stockage des lignes dans une variable
-
-# Chemin du fichier texte
-chemin_fichier = chemin_fichier_temp
-
-# Lecture du fichier et stockage des lignes dans une variable
-with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
-    lignes = fichier.readlines()
-
-    # ajout d'une animation pendant le chargment
-    console = Console()
-    with console.status("[bold purple]impression en cours...") as status:
-        # Boucle pour imprimer chaque limage de chaque ligne
+    with console.status("[bold purple]Impression en cours..."):
         for ligne in lignes:
+            chemin_image = ligne.strip()
+            if not os.path.exists(chemin_image):
+                console.print(f"[bold red]Image introuvable : {chemin_image}")
+                continue
 
-            # print(ligne.strip())  # Utilise strip() pour enlever les espaces et les retours à la ligne cette ligne sert a afficher 
+            # Charger l'image
+            im = Image.open(chemin_image)
 
-            # Ouvrir l'image et préparer pour l'impression
-            im = Image.open(f"{output_dir}/{ligne.strip()}")
-
+            # Configurer l'imprimante Brother
             qlr = BrotherQLRaster(model)
             qlr.exception_on_warning = True
 
@@ -153,17 +128,22 @@ with open(chemin_fichier, 'r', encoding='utf-8') as fichier:
             instructions = convert(
                 qlr=qlr,
                 images=[im],
-                label='62',  # Modifier selon votre étiquette
-                rotate='0', # modifie l'orientation de l'image
+                label="29",  # Remplacez par votre type d'étiquette (ex : 62 pour 62 mm)
+                rotate="0",  # Orientation de l'image
                 threshold=50.0,
                 dither=True,
                 compress=False,
                 red=False,
                 dpi_600=False,
                 hq=True,
-                cut=True
+                cut=True,
             )
 
-            # Envoyer l'impression
-            send(instructions=instructions, printer_identifier=printer, backend_identifier=backend, blocking=True)
-            #print(f"{output_dir}/{ligne.strip()}")
+            # Envoyer l'image à l'imprimante
+            send(
+                instructions=instructions,
+                printer_identifier=printer,
+                backend_identifier=backend,
+                blocking=True,
+            )
+            console.print(f"[bold green]Image imprimée : {chemin_image}")
