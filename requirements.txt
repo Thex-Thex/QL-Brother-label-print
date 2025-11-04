@@ -1,2 +1,2 @@
-pillow
+pillow<10
 brother-ql
