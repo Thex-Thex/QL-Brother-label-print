@@ -55,8 +55,8 @@ with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
                 qr = qrcode.QRCode(
                     version=1,
                     error_correction=qrcode.constants.ERROR_CORRECT_L,
-                    box_size=20,  # Taille du QR Code
-                    border=0,  # Bordure réduite
+                    box_size=40,  # Taille du QR Code
+                    border=2,  # Bordure réduite
                 )
                 qr.add_data(qr_data)
                 qr.make(fit=True)
@@ -70,26 +70,26 @@ with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
                 img_QRcode = img_QRcode.crop(bbox)
 
                 # Générer l'image contenant le texte
-                text_width, text_height = 800, 400  # Taille de l'image pour le texte
+                text_width, text_height = img_QRcode.width, 300  # Largeur identique au QR Code
                 image_text = Image.new("RGB", (text_width, text_height), "white")
                 draw = ImageDraw.Draw(image_text)
 
                 # Calculer la position pour centrer le texte
                 text_width, text_height = draw.textsize(text_data, font=font)
-                text_x = (800 - text_width) // 2  # Centrer horizontalement
-                text_y = (400 - text_height) // 2  # Centrer verticalement
+                text_x = (img_QRcode.width - text_width) // 2  # Centrer horizontalement
+                text_y = (300 - text_height) // 2  # Centrer verticalement
                 draw.text((text_x, text_y), text_data, fill="black", font=font)
 
                 # Fusionner QR Code et texte dans une seule image
-                largeur_totale = img_QRcode.width + image_text.width
-                hauteur_totale = max(img_QRcode.height, image_text.height)
+                largeur_totale = img_QRcode.width
+                hauteur_totale = img_QRcode.height + image_text.height
                 nouvelle_image = Image.new(
                     "RGB", (largeur_totale, hauteur_totale), "white"
                 )
                 nouvelle_image.paste(img_QRcode, (0, 0))  # QR Code à gauche
                 nouvelle_image.paste(
-                    image_text, (img_QRcode.width, 0)
-                )  # Texte à droite
+                    image_text, (0, img_QRcode.height)
+                )  # Texte en dessous
 
                 # Enregistrer l'image finale
                 chemin_enregistrement = os.path.join(
@@ -129,7 +129,7 @@ with open(chemin_fichier_temp, "r", encoding="utf-8") as fichier_temp:
                 qlr=qlr,
                 images=[im],
                 label="29",  # Remplacez par votre type d'étiquette (ex : 62 pour 62 mm)
-                rotate="0",  # Orientation de l'image
+                rotate="90",  # Orientation de l'image
                 threshold=50.0,
                 dither=True,
                 compress=False,
