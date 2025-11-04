@@ -11,5 +11,6 @@ ce script permet d'imprimer une image sur une imprimante Brother modèle ```QL-8
 ### utilisation 
 1. installer python `3.9` cocher add to PATH
 2. cliquer sur disable PATH length limit 
-3. aller sur le [dépôt github](https://github.com/Thex-Thex/QL-Brother-label-print/tree/img_print) et télécharger la branches `img_print`
-4. installer les dépendances `pip install -R requirements.txt`
+3. installer [libusb-win32-devel-filter](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.7.3/)
+4. aller sur le [dépôt github](https://github.com/Thex-Thex/QL-Brother-label-print/tree/img_print) et télécharger la branches `img_print`
+5. installer les dépendances `pip install -R requirements.txt`
