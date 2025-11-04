@@ -1,3 +1,2 @@
-pil
-brother-ql 
-os
+pillow
+brother-ql
