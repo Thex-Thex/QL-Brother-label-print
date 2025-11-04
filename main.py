@@ -33,7 +33,7 @@ with open(csv_file, mode='r', newline='', encoding='utf-8') as fichier_csv:
     # utiliser le csv.DictReader https://docs.python.org/fr/3.10/library/csv.html 
     lecture = csv.DictReader(fichier_csv)
 
-    # ajout d'une animation pendant le chargment
+    # ajout d'une animation pendant le chargement
     console = Console()
     with console.status("[bold green]Génération des QRcode en cours...") as status:
 
