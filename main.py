@@ -21,7 +21,7 @@ backend = 'pyusb'  # ou 'linux_kernel' ou 'network'
 model = 'QL-820NWB'
 printer = 'usb://0x04f9:0x209d'
 
-# générer d'abbord tout les qr code a partire du fichier csv 
+# générer d'abord tout les qr code a partir du fichier csv 
 
 # générer un fichier temporaire pour garder le chemin des QRcode generer
 chemin_fichier_temp = "codeQR-eleves/QRcode.temp"
