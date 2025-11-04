@@ -8,4 +8,8 @@ ce script permet d'imprimer une image sur une imprimante Brother modèle ```QL-8
 - cable USB-B vers USB-A
 - pc windows 11 (nuc + clavier + souris + écran)
 
-### utilisation
+### utilisation 
+1. installer python `3.9` cocher add to PATH
+2. cliquer sur disable PATH length limit 
+3. aller sur le [dépôt github](https://github.com/Thex-Thex/QL-Brother-label-print/tree/img_print) et télécharger la branches `img_print`
+4. installer les dépendances `pip install -R requirements.txt`
