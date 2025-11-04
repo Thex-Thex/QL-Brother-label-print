@@ -24,4 +24,4 @@ ce script permet d'imprimer une image sur une imprimante Brother modèle ```QL-8
 13. aller sur le [dépôt github](https://github.com/Thex-Thex/QL-Brother-label-print/tree/img_print) et télécharger la branches `img_print`
 14. installer les dépendances `pip install -R requirements.txt`
 15. lancer le script
-16. les données contenue dans id_place.csv seront imprimer sous la forme d'un qrcode suivie d'un text
+16. les données contenue dans id_place.csv seront imprimer sous la forme d'un QRcode suivie d'un text
