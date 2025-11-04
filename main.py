@@ -43,10 +43,10 @@ print("file-path = " + os.path.join(script_dir, 'img.png'))
 # resize de l'image pour eviter gaspillage de ruban en cas de mauvaise
 # dimension de l'image source si format portrait au lieu de paysage p.ex
 # pas obligatoire
-# im = im.resize((696, 60)) # pour rouleaux de 62mm # (transN)
+# im = im.resize((696, 60)) # pour rouleaux de 62mm 
 # pour la hauteur possible d'utiliser 40 (min), 60, 80, etc...
 # im = im.resize((566, 165)) # pour rouleaux de 54mm
-# im = im.resize((413, 100))  # pour rouleaux de 38mm # (home)
+# im = im.resize((413, 100))  # pour rouleaux de 38mm 
 
 # backend = 'network'
 backend = 'pyusb'    # 'pyusb', 'linux_kernal', 'network'
@@ -60,8 +60,8 @@ model = 'QL-820NWB'  # your printer model. (QL-820NWB)
 # bus-0/\\.\libusb0-0001--0x04f9-0x209d     04F9/209D
 printer = 'usb://0x04f9:0x209d'
 
-#printer = 'tcp://10.12.1.118'  # (transN)
-#printer = 'tcp://192.168.1.107'  # (home)
+#printer = 'tcp://10.12.1.118'  
+#printer = 'tcp://192.168.1.107' 
 
 qlr = BrotherQLRaster(model)
 qlr.exception_on_warning = True
@@ -69,10 +69,10 @@ qlr.exception_on_warning = True
 instructions = convert(
     qlr=qlr,
     images=[im],  # Takes a list of file names or PIL objects.
-    # label='38',  # (home)
+    # label='38',  
     # label='54',
-    # label='62', # (transN)
-    label='29', # (transN)
+    # label='62', 
+    label='29', 
     rotate='0',  # 'Auto', '0', '90', '270'
     threshold=50.0,  # Black and white threshold in percent.
     dither=True,  # True = niveaux de gris, false = n/b
