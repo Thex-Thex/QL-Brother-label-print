@@ -16,7 +16,7 @@ if not os.path.exists(output_dir):
 csv_file = "dataQR.csv"
 
 # Configuration de l'imprimante Brother QL
-backend = "pyusb"  # 'pyusb', 'linux_kernel', ou 'network'
+backend = "pyusb"  # 'pyusb', 'Linux_kernel', ou 'network'
 model = "QL-820NWB"
 printer = "usb://0x04f9:0x209d"  # Changez ce paramètre pour votre imprimante
 
