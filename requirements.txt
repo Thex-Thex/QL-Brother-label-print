@@ -1,0 +1,4 @@
+pillow<10
+brother-ql
+qrcode
+rich
