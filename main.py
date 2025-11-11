@@ -161,8 +161,8 @@ def print():
                 )
                 console.print(f"[bold green]Image imprimée : {chemin_image}")
 
-create_output_dir
-check_font
-create_temp_file
-make_qrcode_text
-print
+create_output_dir()
+check_font()
+create_temp_file()
+make_qrcode_text()
+print()
