@@ -48,7 +48,7 @@ with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
                 id = row["ID"]
                 code = row["CODE"]
 
-                qr_data = lien
+                qr_data = f"https://{lien}"
                 text_data = f"{lien}\nCode : {code}"
 
                 # Générer le QR Code
