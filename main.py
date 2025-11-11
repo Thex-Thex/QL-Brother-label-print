@@ -7,24 +7,26 @@ from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
-def create_output_dir():
-    # Créer le dossier de sortie s'il n'existe pas
-    output_dir = "codeQR_et_texte_voiture"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
 
 # Chemin du fichier CSV contenant les données
 csv_file = "dataQR.csv"
-
 # Configuration de l'imprimante Brother QL
 backend = "pyusb"  # 'pyusb', 'Linux_kernel', ou 'network'
 model = "QL-820NWB"
 printer = "usb://0x04f9:0x209d"  # Changez ce paramètre pour votre imprimante
 
+def create_output_dir():
+    # Créer le dossier de sortie s'il n'existe pas
+    global output_dir
+    output_dir = "codeQR_et_texte_voiture"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
 def check_font():
     # Configuration de la police pour le texte
     try:
         # Remplacez par le chemin exact de votre police si nécessaire
+        global font
         font = ImageFont.truetype("arial.ttf", 110)
     except IOError:
         print("Police non trouvée. Assurez-vous que 'arial.ttf' est disponible.")
@@ -32,10 +34,14 @@ def check_font():
 
 def create_temp_file():
     # Fichier temporaire pour stocker les chemins des images générées
+    global chemin_fichier_temp
     chemin_fichier_temp = os.path.join(output_dir, "images_a_imprimer.temp")
 
 def make_qrcode_text():
     # Génération des QR Codes et des images
+    global output_dir
+    global chemin_fichier_temp
+    global console
     console = Console()
 
     with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
@@ -110,6 +116,8 @@ def make_qrcode_text():
 
 def print():
     # Impression des images
+    global console
+    global chemin_fichier_temp
     console.print("[bold blue]Démarrage de l'impression des images générées...")
 
     with open(chemin_fichier_temp, "r", encoding="utf-8") as fichier_temp:
