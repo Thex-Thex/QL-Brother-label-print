@@ -58,7 +58,7 @@ def make_qrcode_text():
                     id = row["ID"]
                     code = row["CODE"]
 
-                    qr_data = lien
+                    qr_data = f"https://{lien}"
                     text_data = f"{lien}\nCode : {code}"
 
                     # Générer le QR Code
