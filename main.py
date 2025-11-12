@@ -27,7 +27,7 @@ def check_font():
     try:
         # Remplacez par le chemin exact de votre police si nécessaire
         global font
-        font = ImageFont.truetype("arial.ttf", 110)
+        font = ImageFont.truetype("arial.ttf", 150)
     except IOError:
         print("Police non trouvée. Assurez-vous que 'arial.ttf' est disponible.")
         exit()
