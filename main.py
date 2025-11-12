@@ -23,7 +23,7 @@ printer = "usb://0x04f9:0x209d"  # Changez ce paramètre pour votre imprimante
 # Configuration de la police pour le texte
 try:
     # Remplacez par le chemin exact de votre police si nécessaire
-    font = ImageFont.truetype("arial.ttf", 110)
+    font = ImageFont.truetype("arial.ttf", 150)
 except IOError:
     print("Police non trouvée. Assurez-vous que 'arial.ttf' est disponible.")
     exit()
