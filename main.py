@@ -160,13 +160,16 @@ def print_send(update_progress_print, update_qr_preview):
                 cut=True,
             )
 
-            # Envoyer l'image à l'imprimante
-            send(
+            try:
+                send(
                 instructions=instructions,
                 printer_identifier=printer,
                 backend_identifier=backend,
                 blocking=True,
-            )
+                )
+            except:
+                messagebox.showerror("Erreur", "Impossible d'envoyer a l'imprimante")
+            # Envoyer l'image à l'imprimante
 
              # ------------------- GUI -------------------
             # Affiche le QR généré proportionnel
@@ -199,7 +202,7 @@ def select_files():
     global csv_file
     csv_file = filedialog.askopenfilename(
         title="CSV QRcode",
-        filetypes=[('DataQR', '.csv'), ('All files', '.*')]
+        filetypes=[('DataQR', '.csv')]
     )
 
     if csv_file:
