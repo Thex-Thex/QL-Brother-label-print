@@ -13,7 +13,7 @@ from brother_ql.raster import BrotherQLRaster
 # ---------------------------------
 
 # Chemin du fichier CSV contenant les données
-# csv_file = "dataQR.csv"
+csv_file = ""
 # Configuration de l'imprimante Brother QL
 backend = "pyusb"  # 'pyusb', 'Linux_kernel', ou 'network'
 model = "QL-820NWB"
@@ -45,6 +45,10 @@ def make_qrcode_text(update_progress_gen, update_qr_preview):
     global output_dir
     global chemin_fichier_temp
     global csv_file
+
+    if csv_file == "":
+        messagebox.showerror("Erreur", "Aucun fichier sélectionné")
+        return
 
     # Lire toutes les lignes pour connaître le total
     with open(csv_file, mode="r", newline="", encoding="utf-8") as fichier_csv:
