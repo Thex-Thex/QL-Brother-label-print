@@ -328,6 +328,6 @@ label_qr.grid(row=4, column=0, columnspan=2, pady=20)
 decorate_img = Image.open("img.png")  # Mets ton image ici
 decorate_img = decorate_img.resize((150, 150))
 decorate_photo = ImageTk.PhotoImage(decorate_img)
-tk.Label(frame, image=decorate_photo).grid(row=0, column=3, rowspan=5, padx=20)
+tk.Label(frame, image=decorate_photo).grid(row=0, column=3, rowspan=3, padx=20)
 
 root.mainloop()
