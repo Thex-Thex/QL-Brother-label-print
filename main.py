@@ -2,10 +2,8 @@ import os
 import csv
 import qrcode
 import tkinter as tk
-import time
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageDraw, ImageFont, ImageTk
-from rich.console import Console
 from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
