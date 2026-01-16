@@ -20,8 +20,8 @@ ce script permet d'imprimer une image sur une imprimante Brother modèle ```QL-8
 9. trouver l'imprimante dans le gestionnaire de périphérique ici `ql-820NWB` 
 10. cliquer dessus puis → détails → chemin d'accès à l'instance du périphérique
 11. ouvrer libusb puis install a device filter
-12. trouver l'imprimante et install (utilisé le code trouver dans le gestionnaire de périphérique, ne pas hésiter a installer le filtre sur plusieurs périphérique avec le meme code ) ![alt text](libusb.png)
+12. trouver l'imprimante et install (utilisé le code trouver dans le gestionnaire de périphérique, ne pas hésiter a installer le filtre sur plusieurs périphérique avec le meme code) ![alt text](libusb.png)
 13. aller sur le [dépôt github](https://github.com/Thex-Thex/QL-Brother-label-print) et télécharger la branches `main`
-14. installer les dépendances `pip install -R requirements.txt`
+14. installer les dépendances `pip install -r requirements.txt`
 15. lancer le script
 16. les données contenue dans dataQR.csv seront imprimer sous la forme d'un QRcode avec le text du code en dessus
