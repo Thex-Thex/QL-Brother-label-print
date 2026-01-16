@@ -9,13 +9,13 @@ ce script permet d'imprimer une image sur une imprimante Brother modèle ```QL-8
 - pc windows 11 (nuc + clavier + souris + écran)
 
 ### utilisation 
-1. installer python `3.9` cocher add to PATH (ce trouve dans le dossier installateur)
+1. installer python `3.9` cocher add to PATH (ce trouve dans le dossier nonfree)
 2. cliquer sur disable PATH length limit 
-3. installer les [drivers brother](https://support.brother.com/g/b/downloadend.aspx?c=ch&lang=fr&prod=lpql820nwbeuk&os=10069&dlid=dlfp101277_000&flang=185&type3=347) de l'imprimante (ce trouve dans le dossier installateur)
+3. installer les [drivers brother](https://support.brother.com/g/b/downloadend.aspx?c=ch&lang=fr&prod=lpql820nwbeuk&os=10069&dlid=dlfp101277_000&flang=185&type3=347) de l'imprimante (ce trouve dans le dossier nonfree)
 4. ouvrer l’installateur
 5. choisissez l'imprimante ici ``ql-820NWB``
 6. sélectionner connection USB 
-7. installer [libusb-win32-devel-filter](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.7.3/) (ce trouve dans le dossier installateur)
+7. installer [libusb-win32-devel-filter](https://sourceforge.net/projects/libusb-win32/files/libusb-win32-releases/1.2.7.3/) (ce trouve dans le dossier nonfree)
 8. executer le (filter installer)
 9. trouver l'imprimante dans le gestionnaire de périphérique ici `ql-820NWB` 
 10. cliquer dessus puis → détails → chemin d'accès à l'instance du périphérique
