@@ -72,7 +72,7 @@ def make_qrcode_text(update_progress_gen, update_qr_preview):
                 version=1,
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=40,
-                border=2,
+                border=0,
             )
             qr.add_data(qr_data)
             qr.make(fit=True)
